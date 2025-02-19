@@ -41,6 +41,8 @@ INSTALLED_APPS = [
 
 SELF_APPS = [
    'api',
+   'insumos',
+   'proveedor',
  ]
 
 EXTERNAL_APPS = [
