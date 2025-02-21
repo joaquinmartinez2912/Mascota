@@ -43,6 +43,7 @@ SELF_APPS = [
    'api',
    'insumos',
    'proveedor',
+   'establecimiento',
  ]
 
 EXTERNAL_APPS = [
