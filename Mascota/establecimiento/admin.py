@@ -3,12 +3,12 @@ from establecimiento.models import Campo, Lote
 
 # Register your models here.
 
-@admin.site.register(Campo)
+@admin.register(Campo)
 class CampoAdmin(admin.ModelAdmin):
-    list_display = ['nombre', 'direccion']
-    search_fields = ['nombre', 'direccion']
+    list_display = ['nombre', 'localidad']
+    search_fields = ['nombre', 'localidad']
 
-@admin.site.register(Lote)
+@admin.register(Lote)
 class LoteAdmin(admin.ModelAdmin):
     list_display = ['nombre', 'superficie', 'campo']
     search_fields = ['nombre', 'campo']
