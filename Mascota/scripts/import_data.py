@@ -40,7 +40,7 @@ def run():
         
         for _, row in df_proveedor.iterrows():
             if row["nombre"] not in proveedores_existentes:
-                proveedores_a_crear.append(Proveedor(nombre=row["nombre"]))
+                proveedores_a_crear.append(Proveedor(nombre=row["nombre"],cuit=row["cuit"]))
         
         if proveedores_a_crear:
             Proveedor.objects.bulk_create(proveedores_a_crear)
