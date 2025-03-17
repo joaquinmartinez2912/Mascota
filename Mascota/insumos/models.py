@@ -14,9 +14,9 @@ class Insumo(models.Model):
     codigo = models.CharField(max_length=50)
     cantidad = models.IntegerField()    
     unidad_medida = models.CharField(max_length=50)
-    proveedor = models.ForeignKey(Proveedor, on_delete=models.PROTECT, related_name = 'proveedores',
+    proveedor = models.ForeignKey(Proveedor, on_delete=models.PROTECT, related_name = 'insumos',
 null=False)
-    categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE, related_name = 'categorias',
+    categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE, related_name = 'insumos',
 null=False)
 
     def __str__(self):
