@@ -3,6 +3,7 @@ from django.db import transaction
 from insumos.models import Insumo, Categoria
 from proveedor.models import Proveedor
 from establecimiento.models import Campo, Lote
+from compras.models import Compra
 
 def run():
     # Cargar el archivo Excel con todas las hojas
@@ -70,10 +71,8 @@ def run():
             if row["nombre"] not in lotes_existentes:
                 # car = campos_existentes.get("La Esmeralda")
                 # print(car.nombre)
-                campo_nombre = str(row["campo"])
-                print(campo_nombre)
+                campo_nombre = str(row["campo"])  
                 campo = campos_existentes.get(campo_nombre)
-                print(campo)
                 lotes_a_crear.append(Lote(nombre=row["nombre"],superficie=row["superficie"],campo=campo))
         
         if lotes_a_crear:
@@ -149,6 +148,34 @@ def run():
         print(f"[OK] {len(insumos_a_crear)} Insumos nuevos cargados.")
         if errores > 0:
             print(f"[AVISO] Se encontraron {errores} problemas durante la importacion.")
+
+        # --- Cargar Compras ---
+        print("Procesando compras...")
+        df_compra = sheets["Compras"]  
+        
+        compras_a_crear = []
+        compras_existentes = {p.id: p for p in Compra.objects.all()}
+        insumos_existentes = {p.nombre: p for p in Insumo.objects.all()}
+        
+        for _, row in df_compra.iterrows():
+            
+            if row["indice"] not in compras_existentes:
+                insumo_id = str(row["descripcion"])
+                insumo = insumos_existentes.get(insumo_id)
+                compras_a_crear.append(Compra(
+                    fecha=row["fecha"],
+                    insumo=insumo,
+                    cantidad=row["cantidad"],
+                    precio=row["precio"],
+                    ciclo=row["ciclo"],
+                    empresa=row["empresa"]
+                    )
+                )
+        
+        if compras_a_crear:
+            Compra.objects.bulk_create(compras_a_crear)
+        
+        print(f"[OK] {len(compras_a_crear)} compras nuevos cargados.")
         
     except Exception as e:
         print(f"[ERROR] Error general: {str(e)}")
