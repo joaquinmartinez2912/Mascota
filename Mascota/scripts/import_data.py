@@ -3,7 +3,7 @@ from django.db import transaction
 from insumos.models import Insumo, Categoria
 from proveedor.models import Proveedor
 from establecimiento.models import Campo, Lote
-from compras.models import Compra
+from compras.models import Compra, CompraDetalle
 
 def run():
     # Cargar el archivo Excel con todas las hojas
@@ -155,18 +155,13 @@ def run():
         
         compras_a_crear = []
         compras_existentes = {p.id: p for p in Compra.objects.all()}
-        insumos_existentes = {p.nombre: p for p in Insumo.objects.all()}
-        
+
         for _, row in df_compra.iterrows():
             
             if row["indice"] not in compras_existentes:
-                insumo_id = str(row["descripcion"])
-                insumo = insumos_existentes.get(insumo_id)
+
                 compras_a_crear.append(Compra(
                     fecha=row["fecha"],
-                    insumo=insumo,
-                    cantidad=row["cantidad"],
-                    precio=row["precio"],
                     ciclo=row["ciclo"],
                     empresa=row["empresa"]
                     )
@@ -176,6 +171,36 @@ def run():
             Compra.objects.bulk_create(compras_a_crear)
         
         print(f"[OK] {len(compras_a_crear)} compras nuevos cargados.")
+
+        # --- Cargar ComprasDetalle ---
+        print("Procesando comprasDetalle...")
+        df_compra = sheets["Compras_Detalle"]  
+        
+        comprasDetalle_a_crear = []
+        comprasDetalle_existentes = {p.id: p for p in CompraDetalle.objects.all()}
+        compras_existentes = {p.id: p for p in Compra.objects.all()}
+        insumos_existentes = {p.nombre: p for p in Insumo.objects.all()}
+        
+        for _, row in df_compra.iterrows():
+            
+            if row["indice"] not in comprasDetalle_existentes:
+                insumo_id = str(row["descripcion"])
+                insumo = insumos_existentes.get(insumo_id)
+                compra_id = row["id_compra"]
+                compra = compras_existentes.get(compra_id)
+                print(compra)
+                comprasDetalle_a_crear.append(CompraDetalle(
+                    compra=compra,
+                    insumo=insumo,
+                    precio=row["precio"],
+                    cantidad=row["cantidad"]
+                    )
+                )
+        
+        if comprasDetalle_a_crear:
+            CompraDetalle.objects.bulk_create(comprasDetalle_a_crear)
+        
+        print(f"[OK] {len(comprasDetalle_a_crear)} comprasDetalle nuevos cargados.")
         
     except Exception as e:
         print(f"[ERROR] Error general: {str(e)}")

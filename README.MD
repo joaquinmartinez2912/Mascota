@@ -16,4 +16,5 @@ python manage.py runscript import_data
 Crear usuario
 ```
 python3 manage.py createsuperuser --username (nombre)
+winpty python manage.py createsuperuser
 ```
