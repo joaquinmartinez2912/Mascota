@@ -5,8 +5,8 @@ from insumos.models import Categoria, Insumo
 
 @admin.register(Categoria)
 class CategoriaAdmin(admin.ModelAdmin):
-    list_display = ['nombre']
-    search_fields = ['nombre']          
+    list_display = ['id','nombre']
+    search_fields = ['id','nombre']          
 
 @admin.register(Insumo)
 class InsumoAdmin(admin.ModelAdmin):
