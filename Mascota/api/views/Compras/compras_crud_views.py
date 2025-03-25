@@ -1,12 +1,12 @@
 from rest_framework.viewsets import ModelViewSet
-from api.serializers.Compras.compras_crud_serializers import CompraSerializer, CompraDetalleSerializer
+from api.serializers.Compras.compras_crud_serializers import CompraSerializer, CompraDetalleSerializer, DetallePorCompraSerializer
 from compras.models import Compra, CompraDetalle
 
 from django_filters.rest_framework import DjangoFilterBackend
 
 class CompraViewSet(ModelViewSet):       
     queryset = Compra.objects.all()
-    serializer_class = CompraSerializer
+    serializer_class = DetallePorCompraSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['ciclo','empresa','compra_detalle__insumo__categoria_id']
 
