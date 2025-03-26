@@ -4,6 +4,7 @@ from api.views.Insumos.insumos_crud_views import InsumosViewSet
 from api.views.Establecimientos.estab_crud_views import CampoViewSet, LoteViewSet
 from api.views.Proveedores.proveedores_crud_views import ProveedorViewSet
 from api.views.Compras.compras_crud_views import CompraViewSet, CompraDetalleViewSet
+from api.views.Insumos.compras_por_insumo_views import ComprasPorInsumoView
 
 router = DefaultRouter()
 router.register(r'insumos', InsumosViewSet)
@@ -15,4 +16,5 @@ router.register(r'compras_detalle', CompraDetalleViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('compras_por_insumo/<int:insumo_id>/', ComprasPorInsumoView.as_view({'get': 'list'}), name='compras_por_insumo'),
 ]

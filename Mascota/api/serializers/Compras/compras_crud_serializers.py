@@ -36,4 +36,5 @@ class DetallePorCompraSerializer(serializers.ModelSerializer):
     def get_detalle(self, obj):
         return CompraDetalleMinSerializer(obj.compra_detalle.all(),many=True).data
     
+
     
