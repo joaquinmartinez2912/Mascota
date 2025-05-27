@@ -47,6 +47,7 @@ SELF_APPS = [
    'proveedor',
    'establecimiento',
    'compras',
+   'Ordenes',
  ]
 
 EXTERNAL_APPS = [

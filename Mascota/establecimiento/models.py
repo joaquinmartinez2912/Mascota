@@ -13,3 +13,6 @@ class Lote(models.Model):
     nombre = models.CharField(max_length=50)
     superficie = models.FloatField()
     campo = models.ForeignKey(Campo, on_delete=models.PROTECT, related_name = 'campos', null=False)
+
+    def __str__(self):
+        return self.nombre

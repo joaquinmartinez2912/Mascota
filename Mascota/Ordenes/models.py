@@ -6,10 +6,22 @@ from establecimiento.models import Lote
 
 class Ordenes(models.Model):
     fecha = models.DateField()
-    insumo = models.ForeignKey(Insumo, on_delete=models.CASCADE, related_name='ordenes', null=False)
-    lote = models.ForeignKey(Lote, on_delete=models.CASCADE, related_name='ordenes', null=False)
+
+    def __str__(self):
+        return f"Orden {self.id} - {self.fecha}"
+    
+class OrdenesDetalle(models.Model):
+    orden = models.ForeignKey(Ordenes, on_delete=models.CASCADE, related_name='ordenes_detalle')
+    insumo = models.ForeignKey(Insumo, on_delete=models.CASCADE, related_name='ordenes_detalle', null=False)
     cantidad = models.IntegerField()
 
     def __str__(self):
-        return f"Orden {self.id} - {self.fecha} - {self.insumo.nombre}"
+        return f"Detalle {self.id} - Orden {self.orden.id} - Insumo {self.insumo.nombre}"
+
+class OrdenesLote(models.Model):
+    orden = models.ForeignKey(Ordenes, on_delete=models.CASCADE, related_name='ordenes_lote')
+    lote = models.ForeignKey(Lote, on_delete=models.CASCADE, related_name='ordenes_lote', null=False)
+
+    def __str__(self):
+        return f"Lote {self.lote.id} - Orden {self.orden.id}"
 
