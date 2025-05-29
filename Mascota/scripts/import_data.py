@@ -4,6 +4,7 @@ from insumos.models import Insumo, Categoria
 from proveedor.models import Proveedor
 from establecimiento.models import Campo, Lote
 from compras.models import Compra, CompraDetalle
+from Ordenes.models import Ordenes, OrdenesDetalle, OrdenesLote
 
 def run():
     # Cargar el archivo Excel con todas las hojas
@@ -204,3 +205,24 @@ def run():
         
     except Exception as e:
         print(f"[ERROR] Error general: {str(e)}")
+
+        # --- Cargar Ordenes de compra ---
+        print("Procesando compras...")
+        df_ordenes = sheets["Ordenes"]  
+        
+        ordenes_a_crear = []
+        ordenes_existentes = {p.id: p for p in Ordenes.objects.all()}
+
+        for _, row in df_ordenes.iterrows():
+            
+            if row["indice"] not in ordenes_existentes:
+
+                ordenes_a_crear.append(Ordenes(
+                    fecha=row["fecha"]
+                    )
+                )
+        
+        if ordenes_a_crear:
+            Ordenes.objects.bulk_create(ordenes_a_crear)
+        
+        print(f"[OK] {len(ordenes_a_crear)} ordenes nuevas cargados.")
