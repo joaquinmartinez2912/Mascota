@@ -173,41 +173,8 @@ def run():
         
         print(f"[OK] {len(compras_a_crear)} compras nuevos cargados.")
 
-        # --- Cargar ComprasDetalle ---
-        print("Procesando comprasDetalle...")
-        df_compra = sheets["Compras_Detalle"]  
-        
-        comprasDetalle_a_crear = []
-        comprasDetalle_existentes = {p.id: p for p in CompraDetalle.objects.all()}
-        compras_existentes = {p.id: p for p in Compra.objects.all()}
-        insumos_existentes = {p.nombre: p for p in Insumo.objects.all()}
-        
-        for _, row in df_compra.iterrows():
-            
-            if row["indice"] not in comprasDetalle_existentes:
-                insumo_id = str(row["descripcion"])
-                insumo = insumos_existentes.get(insumo_id)
-                compra_id = row["id_compra"]
-                compra = compras_existentes.get(compra_id)
-                print(compra)
-                comprasDetalle_a_crear.append(CompraDetalle(
-                    compra=compra,
-                    insumo=insumo,
-                    precio=row["precio"],
-                    cantidad=row["cantidad"]
-                    )
-                )
-        
-        if comprasDetalle_a_crear:
-            CompraDetalle.objects.bulk_create(comprasDetalle_a_crear)
-        
-        print(f"[OK] {len(comprasDetalle_a_crear)} comprasDetalle nuevos cargados.")
-        
-    except Exception as e:
-        print(f"[ERROR] Error general: {str(e)}")
-
-        # --- Cargar Ordenes de compra ---
-        print("Procesando compras...")
+        # --- Cargar Ordenes ---
+        print("Procesando ordenes...")
         df_ordenes = sheets["Ordenes"]  
         
         ordenes_a_crear = []
@@ -226,3 +193,101 @@ def run():
             Ordenes.objects.bulk_create(ordenes_a_crear)
         
         print(f"[OK] {len(ordenes_a_crear)} ordenes nuevas cargados.")
+
+        # --- Cargar Ordenes Detalle  ---
+        print("Procesando ordenesDetalle...")
+        df_ordenes = sheets["Ordenes_Detalle"]  
+        
+        ordenes_detalle_a_crear = []
+        ordenes_detalle_existentes = {p.id: p for p in OrdenesDetalle.objects.all()}
+
+        ordenes_existentes = {p.id: p for p in Ordenes.objects.all()}
+        insumos_existentes = {p.id: p for p in Insumo.objects.all()}
+        
+        for _, row in df_ordenes.iterrows():
+            
+            if row["indice"] not in ordenes_detalle_existentes:
+                insumo_id = int(str(row["insumo_id"]))
+                insumo = insumos_existentes.get(insumo_id)
+                
+                orden_id = int(str(row["orden_id"]))
+                orden = ordenes_existentes.get(orden_id)
+                
+                ordenes_detalle_a_crear.append(OrdenesDetalle(
+                    orden=orden,
+                    insumo=insumo,
+                    cantidad=row["cantidad"]
+                    )
+                )
+        
+        if ordenes_detalle_a_crear:
+            OrdenesDetalle.objects.bulk_create(ordenes_detalle_a_crear)
+        
+        print(f"[OK] {len(ordenes_detalle_a_crear)} ordenes detalle nuevas cargados.")
+
+
+        # --- Cargar Ordenes Lote  ---
+        print("Procesando ordenesLote...")
+        df_lote = sheets["Ordenes_Lote"]  
+        
+        ordenes_lote_a_crear = []
+        ordenes_lote_existentes = {p.id: p for p in OrdenesLote.objects.all()}
+
+        ordenes_existentes = {p.id: p for p in Ordenes.objects.all()}
+        lotes_existentes = {p.id: p for p in Lote.objects.all()}
+
+        for _, row in df_lote.iterrows():
+            
+            if row["indice"] not in ordenes_lote_existentes:
+                lote_id = int(str(row["lote_id"]))
+                lote = lotes_existentes.get(lote_id)
+                
+                orden_id = int(str(row["orden_id"]))
+                orden = ordenes_existentes.get(orden_id)
+                
+                ordenes_lote_a_crear.append(OrdenesLote(
+                    orden=orden,
+                    lote=lote
+                    )
+                )
+        
+        if ordenes_lote_a_crear:
+            OrdenesLote.objects.bulk_create(ordenes_lote_a_crear)
+        
+        print(f"[OK] {len(ordenes_lote_a_crear)} ordenes lote nuevas cargados.")
+
+
+
+        # --- Cargar ComprasDetalle ---
+        print("Procesando comprasDetalle...")
+        df_compra = sheets["Compras_Detalle"]  
+        
+        comprasDetalle_a_crear = []
+        comprasDetalle_existentes = {p.id: p for p in CompraDetalle.objects.all()}
+        compras_existentes = {p.id: p for p in Compra.objects.all()}
+        insumos_existentes = {p.nombre: p for p in Insumo.objects.all()}
+        
+        for _, row in df_compra.iterrows():
+            
+            if row["indice"] not in comprasDetalle_existentes:
+                insumo_id = str(row["descripcion"])
+                insumo = insumos_existentes.get(insumo_id)
+                compra_id = row["id_compra"]
+                compra = compras_existentes.get(compra_id)
+                comprasDetalle_a_crear.append(CompraDetalle(
+                    compra=compra,
+                    insumo=insumo,
+                    precio=row["precio"],
+                    cantidad=row["cantidad"]
+                    )
+                )
+        
+        if comprasDetalle_a_crear:
+            CompraDetalle.objects.bulk_create(comprasDetalle_a_crear)
+        
+        print(f"[OK] {len(comprasDetalle_a_crear)} comprasDetalle nuevos cargados.")
+        
+    except Exception as e:
+        print(f"[ERROR] Error general: {str(e)}")
+
+
