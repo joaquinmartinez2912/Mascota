@@ -8,7 +8,9 @@ from Ordenes.models import Ordenes, OrdenesDetalle, OrdenesLote
 
 def run():
     # Cargar el archivo Excel con todas las hojas
-    file_path = r"C:\Proyectos\Mascota\datos.xlsx"  # La r evita problemas con las barras invertidas
+    # file_path = r"C:\Proyectos\Mascota\datos.xlsx"  # La r evita problemas con las barras invertidas
+    
+    file_path = r"/home/joaquin/Documentos/Proyectos/Mascota/datos.xlsx"  # La r evita problemas con las barras invertidas
     
     try:
         # Carga todas las pestañas
